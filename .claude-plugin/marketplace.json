@@ -1,0 +1,28 @@
+{
+  "name": "cabinlab-plugins",
+  "owner": {
+    "name": "cabinlab",
+    "email": "66889299+cabinlab@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Private Claude Code plugins for CAD and automation workflows",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "fusion360-cad",
+      "source": {
+        "source": "github",
+        "repo": "cabinlab/fusion360-agents",
+        "path": ".claude/plugins/fusion360-cad"
+      },
+      "description": "Fusion 360 CAD workflow support with MCP tools and skills for sheet metal design",
+      "version": "0.1.0",
+      "author": {
+        "name": "cabinlab"
+      },
+      "category": "cad",
+      "keywords": ["fusion360", "cad", "sheet-metal", "mcp"]
+    }
+  ]
+}
