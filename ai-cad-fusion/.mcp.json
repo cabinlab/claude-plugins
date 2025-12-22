@@ -1,8 +1,14 @@
 {
   "mcpServers": {
     "fusion": {
-      "command": "python",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/fusion_mcp_server.py"],
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "httpx",
+        "--with", "mcp",
+        "--with", "pydantic",
+        "${CLAUDE_PLUGIN_ROOT}/mcp-server/fusion_mcp_server.py"
+      ],
       "cwd": "${CLAUDE_PLUGIN_ROOT}"
     }
   }
