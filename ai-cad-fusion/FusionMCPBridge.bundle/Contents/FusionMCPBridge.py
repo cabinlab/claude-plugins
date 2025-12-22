@@ -362,7 +362,7 @@ def _purge_bridge_modules():
                 f_abs = os.path.abspath(f)
             except Exception:
                 continue
-            if f_abs.startswith(root) and not f_abs.endswith("AgentBridge.py"):
+            if f_abs.startswith(root) and not f_abs.endswith("FusionMCPBridge.py"):
                 victims.append(name)
         for name in victims:
             sys.modules.pop(name, None)
