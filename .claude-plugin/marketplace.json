@@ -10,19 +10,15 @@
   },
   "plugins": [
     {
-      "name": "fusion360-cad",
-      "source": {
-        "source": "github",
-        "repo": "cabinlab/",
-        "path": ".claude/plugins/fusion360-cad"
-      },
-      "description": "Fusion 360 CAD workflow support with MCP tools and skills for sheet metal design",
+      "name": "ai-cad-fusion",
+      "source": "./ai-cad-fusion",
+      "description": "AI-powered CAD automation for Autodesk Fusion. Claude-assisted sheet metal design, parametric modeling, and geometry preparation.",
       "version": "0.1.0",
       "author": {
         "name": "cabinlab"
       },
       "category": "cad",
-      "keywords": ["fusion360", "cad", "sheet-metal", "mcp"]
+      "keywords": ["fusion", "cad", "sheet-metal", "mcp", "ai"]
     }
   ]
 }
