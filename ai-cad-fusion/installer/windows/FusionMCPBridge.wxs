@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <!-- Product definition -->
+    <Product Id="*"
+             Name="FusionMCPBridge"
+             Language="1033"
+             Version="0.1.0.0"
+             Manufacturer="cabinlab"
+             UpgradeCode="039BC125-8261-45E3-8BEE-8C7162B50986">
+
+        <Package InstallerVersion="200"
+                 Compressed="yes"
+                 InstallScope="perUser"
+                 Description="MCP Bridge for Claude AI - Fusion 360 integration"
+                 Comments="Enables Claude AI to control Autodesk Fusion through MCP protocol" />
+
+        <!-- Embed cabinet in MSI -->
+        <MediaTemplate EmbedCab="yes" />
+
+        <!-- Upgrade handling - remove older versions -->
+        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+        <!-- Installation directory structure -->
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="AppDataFolder">
+                <Directory Id="AutodeskDir" Name="Autodesk">
+                    <Directory Id="ApplicationPluginsDir" Name="ApplicationPlugins">
+                        <Directory Id="INSTALLFOLDER" Name="FusionMCPBridge.bundle">
+                            <Directory Id="ContentsDir" Name="Contents">
+                                <Directory Id="CoreDir" Name="core" />
+                                <Directory Id="HandlersDir" Name="handlers" />
+                                <Directory Id="ServicesDir" Name="services" />
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <!-- Feature definition -->
+        <Feature Id="MainFeature" Title="FusionMCPBridge" Level="1">
+            <ComponentGroupRef Id="BundleFiles" />
+        </Feature>
+
+        <!-- Add/Remove Programs icon and info -->
+        <Icon Id="ProductIcon" SourceFile="$(var.SourceDir)\FusionMCPBridge.bundle\PackageContents.xml" />
+        <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+        <Property Id="ARPURLINFOABOUT" Value="https://github.com/cabinlab/claude-plugins" />
+        <Property Id="ARPNOREPAIR" Value="yes" />
+        <Property Id="ARPNOMODIFY" Value="yes" />
+
+    </Product>
+
+    <!-- Component group for all bundle files -->
+    <Fragment>
+        <ComponentGroup Id="BundleFiles" Directory="INSTALLFOLDER">
+
+            <!-- Root bundle files -->
+            <Component Id="PackageContents" Guid="A1B2C3D4-E5F6-7890-ABCD-EF1234567890">
+                <File Id="PackageContentsXml"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\PackageContents.xml"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Contents folder files -->
+            <Component Id="MainPython" Guid="B2C3D4E5-F678-90AB-CDEF-123456789012" Directory="ContentsDir">
+                <File Id="FusionMCPBridgePy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\FusionMCPBridge.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="Manifest" Guid="C3D4E5F6-7890-ABCD-EF12-345678901234" Directory="ContentsDir">
+                <File Id="FusionMCPBridgeManifest"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\FusionMCPBridge.manifest"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="ConfigPy" Guid="D4E5F678-90AB-CDEF-1234-567890123456" Directory="ContentsDir">
+                <File Id="ConfigPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\config.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- core folder -->
+            <Component Id="CoreInit" Guid="E5F67890-ABCD-EF12-3456-789012345678" Directory="CoreDir">
+                <File Id="CoreInitPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\core\__init__.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="CoreErrors" Guid="F6789012-CDEF-1234-5678-901234567890" Directory="CoreDir">
+                <File Id="ErrorsPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\core\errors.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="CoreRouter" Guid="01234567-89AB-CDEF-0123-456789ABCDEF" Directory="CoreDir">
+                <File Id="RouterPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\core\router.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- handlers folder -->
+            <Component Id="HandlersInit" Guid="12345678-9ABC-DEF0-1234-56789ABCDEF0" Directory="HandlersDir">
+                <File Id="HandlersInitPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\__init__.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersBase" Guid="23456789-ABCD-EF01-2345-6789ABCDEF01" Directory="HandlersDir">
+                <File Id="BasePy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\base.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersConstraints" Guid="3456789A-BCDE-F012-3456-789ABCDEF012" Directory="HandlersDir">
+                <File Id="ConstraintsPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\constraints.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersDocument" Guid="456789AB-CDEF-0123-4567-89ABCDEF0123" Directory="HandlersDir">
+                <File Id="DocumentPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\document.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersFeatures" Guid="56789ABC-DEF0-1234-5678-9ABCDEF01234" Directory="HandlersDir">
+                <File Id="FeaturesPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\features.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersInspection" Guid="6789ABCD-EF01-2345-6789-ABCDEF012345" Directory="HandlersDir">
+                <File Id="InspectionPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\inspection.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersParameters" Guid="789ABCDE-F012-3456-789A-BCDEF0123456" Directory="HandlersDir">
+                <File Id="ParametersPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\parameters.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersSketches" Guid="89ABCDEF-0123-4567-89AB-CDEF01234567" Directory="HandlersDir">
+                <File Id="SketchesPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\sketches.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="HandlersUI" Guid="9ABCDEF0-1234-5678-9ABC-DEF012345678" Directory="HandlersDir">
+                <File Id="UIPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\handlers\ui.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- services folder -->
+            <Component Id="ServicesInit" Guid="ABCDEF01-2345-6789-ABCD-EF0123456789" Directory="ServicesDir">
+                <File Id="ServicesInitPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\services\__init__.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="ServicesEntityResolver" Guid="BCDEF012-3456-789A-BCDE-F01234567890" Directory="ServicesDir">
+                <File Id="EntityResolverPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\services\entity_resolver.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="ServicesFusionContext" Guid="CDEF0123-4567-89AB-CDEF-012345678901" Directory="ServicesDir">
+                <File Id="FusionContextPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\services\fusion_context.py"
+                      KeyPath="yes" />
+            </Component>
+
+            <Component Id="ServicesValidators" Guid="DEF01234-5678-9ABC-DEF0-123456789012" Directory="ServicesDir">
+                <File Id="ValidatorsPy"
+                      Source="$(var.SourceDir)\FusionMCPBridge.bundle\Contents\services\validators.py"
+                      KeyPath="yes" />
+            </Component>
+
+        </ComponentGroup>
+    </Fragment>
+
+</Wix>
