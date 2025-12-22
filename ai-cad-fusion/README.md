@@ -7,7 +7,7 @@ AI-powered CAD automation for Autodesk Fusion (formerly Fusion 360). Enables Cla
 Before using this plugin, you need:
 
 1. **Autodesk Fusion** installed and running
-2. **Python 3.10+** with required packages (see below)
+2. **uv** (Python package manager) - install from https://docs.astral.sh/uv/
 3. **AgentBridge add-in** installed in Fusion
 
 ## Installation Steps
@@ -18,15 +18,21 @@ Before using this plugin, you need:
 /plugin add cabinlab/claude-plugins --path ai-cad-fusion
 ```
 
-### Step 2: Install Python Dependencies
+### Step 2: Install uv (if not already installed)
 
-The MCP server requires these packages. Install them in the Python environment Claude Code uses:
+The MCP server uses `uv` to automatically manage Python dependencies. Install it:
 
-```bash
-pip install httpx mcp pydantic
+**Windows (PowerShell):**
+```powershell
+irm https://astral.sh/uv/install.ps1 | iex
 ```
 
-**Note:** If you're running Claude Code in WSL and Fusion on Windows, make sure these are installed in your WSL Python environment.
+**WSL / macOS / Linux:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Python dependencies (`httpx`, `mcp`, `pydantic`) are installed automatically on first run.
 
 ### Step 3: Install the AgentBridge Add-in in Fusion
 
@@ -85,12 +91,12 @@ This means the AgentBridge add-in isn't running:
 
 ### MCP Server fails to start
 
-Check Python dependencies:
+Check that `uv` is installed and working:
 ```bash
-python -c "import httpx, mcp, pydantic; print('OK')"
+uv --version
 ```
 
-If that fails, install the missing packages.
+If `uv` is not found, install it (see Step 2 above).
 
 ### WSL users: Connection issues
 
