@@ -85,18 +85,48 @@ _registry = None
 
 def run(context):
     """Entry point for the add-in"""
+    global _app, _ui
+    _app = adsk.core.Application.get()
+    _ui = _app.userInterface
+
     try:
-        global _app, _ui
-        _app = adsk.core.Application.get()
-        _ui = _app.userInterface
-        
         start_server()
         host, port = _get_bind_addr()
-        print(f"[BRIDGE] MCP Bridge started on http://{host}:{port}")
-        
+        print(f"[BRIDGE] FusionMCPBridge started on http://{host}:{port}")
+
+    except OSError as e:
+        # Handle specific OS errors with helpful messages
+        error_str = str(e).lower()
+        host, port = _get_bind_addr()
+
+        if "address already in use" in error_str or "errno 98" in error_str or "errno 10048" in error_str:
+            _ui.messageBox(
+                f"FusionMCPBridge: Port {port} is already in use.\n\n"
+                "Possible causes:\n"
+                "• Another instance of FusionMCPBridge is running\n"
+                "• Another application is using port {port}\n\n"
+                "Try restarting Fusion or check for conflicting applications.",
+                "FusionMCPBridge - Startup Error"
+            )
+        elif "permission denied" in error_str or "errno 13" in error_str:
+            _ui.messageBox(
+                f"FusionMCPBridge: Permission denied for port {port}.\n\n"
+                "The port may require elevated privileges or be blocked by firewall.",
+                "FusionMCPBridge - Startup Error"
+            )
+        else:
+            _ui.messageBox(
+                f"FusionMCPBridge: Network error during startup.\n\n{str(e)}",
+                "FusionMCPBridge - Startup Error"
+            )
+        raise
+
     except Exception as e:
-        if _ui:
-            _ui.messageBox(f"Failed to start MCP Bridge: {str(e)}")
+        _ui.messageBox(
+            f"FusionMCPBridge: Failed to start.\n\n{str(e)}",
+            "FusionMCPBridge - Startup Error"
+        )
+        raise
 
 
 def stop(context):
@@ -118,11 +148,11 @@ def stop(context):
         # Purge bridge modules so next start() picks up code changes without Fusion restart
         _purge_bridge_modules()
         
-        print("[BRIDGE] MCP Bridge stopped and modules purged")
+        print("[BRIDGE] FusionMCPBridge stopped and modules purged")
         
     except Exception as e:
         if _ui:
-            _ui.messageBox(f"Error stopping MCP Bridge: {str(e)}")
+            _ui.messageBox(f"Error stopping FusionMCPBridge: {str(e)}")
 
 
 def make_handler_class(registry):
