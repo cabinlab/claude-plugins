@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "fusion": {
+      "command": "python",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/fusion_mcp_server.py"],
+      "cwd": "${CLAUDE_PLUGIN_ROOT}"
+    }
+  }
+}
