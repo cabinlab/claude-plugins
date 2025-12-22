@@ -87,7 +87,7 @@ try:
 except Exception:
     pass
 
-BRIDGE_TIMEOUT = 3.0
+BRIDGE_TIMEOUT = 1.0  # Fail fast - bridge responds in <100ms when running
 SERVER_VERSION = "0.0.1"
 SCHEMA_VERSION = "0.1"
 
@@ -134,7 +134,7 @@ class BridgeClient:
             response.raise_for_status()
             return response.json()
         except httpx.ConnectError:
-            raise BridgeError("E_CONNECTION", "Cannot connect to Fusion 360 bridge")
+            raise BridgeError("E_CONNECTION", "Cannot connect to Fusion bridge - is Fusion running with AgentBridge add-in enabled? Do NOT retry - fix the setup first.")
         except httpx.TimeoutException:
             raise BridgeError("E_TIMEOUT", "Bridge health check timed out")
         except httpx.HTTPStatusError as e:
@@ -173,7 +173,7 @@ class BridgeClient:
             return result
                 
         except httpx.ConnectError:
-            raise BridgeError("E_CONNECTION", "Cannot connect to Fusion 360 bridge")
+            raise BridgeError("E_CONNECTION", "Cannot connect to Fusion bridge - is Fusion running with AgentBridge add-in enabled? Do NOT retry - fix the setup first.")
         except httpx.TimeoutException:
             raise BridgeError("E_TIMEOUT", f"Action '{action}' timed out")
         except httpx.HTTPStatusError as e:
