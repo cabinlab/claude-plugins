@@ -10,13 +10,26 @@ Private marketplace for Claude Code plugins.
 
 ## Available Plugins
 
-### fusion360-cad
+### ai-cad-fusion
 
-Fusion 360 CAD workflow support with MCP tools and cognitive skills for sheet metal design, parametric modeling, and geometry preparation patterns.
+AI-powered CAD automation for Autodesk Fusion (formerly Fusion 360).
 
 **Features:**
-- MCP tools for Fusion 360 automation via agent-bridge
+- MCP tools for Fusion automation (sketching, extrusions, parameters, etc.)
 - Sheet metal workflow skill with preparation patterns
 - Support for bend line preparation, relief cuts, and conversion guidance
+
+**Requirements:**
+- Autodesk Fusion installed
+- Python packages: `httpx`, `mcp`, `pydantic`
+- **AgentBridge add-in must be manually installed in Fusion** (see plugin README)
+
+**Quick Install:**
+```
+/plugin add cabinlab/claude-plugins --path ai-cad-fusion
+pip install httpx mcp pydantic
+```
+
+Then install the AgentBridge add-in - see [ai-cad-fusion/README.md](ai-cad-fusion/README.md) for detailed instructions.
 
 **Source:** [cabinlab/fusion360-agents](https://github.com/cabinlab/fusion360-agents)
