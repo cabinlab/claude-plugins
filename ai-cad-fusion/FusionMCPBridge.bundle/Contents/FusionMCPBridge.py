@@ -15,10 +15,18 @@ import os
 import sys
 from importlib import import_module, invalidate_caches
 
-# Ensure this add-in directory is importable
-_here = os.path.dirname(__file__)
+# Dev mode: load from custom path if FUSIONMCP_DEV_PATH is set
+_dev_path = os.environ.get('FUSIONMCP_DEV_PATH')
+if _dev_path and os.path.isdir(_dev_path):
+    _here = _dev_path
+    _dev_mode = True
+else:
+    _here = os.path.dirname(__file__)
+    _dev_mode = False
+
+# Ensure the add-in directory is importable
 if _here and _here not in sys.path:
-    sys.path.append(_here)
+    sys.path.insert(0, _here)  # Insert at front to take priority
 
 # Config values are fetched dynamically at runtime to support /dev/reload of config.py
 
@@ -92,7 +100,10 @@ def run(context):
     try:
         start_server()
         host, port = _get_bind_addr()
-        print(f"[BRIDGE] FusionMCPBridge started on http://{host}:{port}")
+        if _dev_mode:
+            print(f"[BRIDGE] FusionMCPBridge started on http://{host}:{port} (DEV MODE: {_here})")
+        else:
+            print(f"[BRIDGE] FusionMCPBridge started on http://{host}:{port}")
 
     except OSError as e:
         # Handle specific OS errors with helpful messages
@@ -187,12 +198,14 @@ def make_handler_class(registry):
                 if parsed.path == "/health":
                     fusion = get_fusion_state()
                     ver = _cfg_version()
-                    print(f"[AGENT] Health check - version from config: {ver}")
                     body = {
                         "status": "ok",
                         "version": ver,
                         "fusion": fusion
                     }
+                    if _dev_mode:
+                        body["dev_mode"] = True
+                        body["dev_path"] = _here
                     self._send_json_response(200, body)
                 else:
                     self._send_json_response(404, {
