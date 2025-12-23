@@ -21,15 +21,12 @@ AI-powered CAD automation for Autodesk Fusion (formerly Fusion 360).
 
 **Requirements:**
 - Autodesk Fusion installed
-- Python packages: `httpx`, `mcp`, `pydantic`
-- **AgentBridge add-in must be manually installed in Fusion** (see plugin README)
+- [uv](https://docs.astral.sh/uv/) (Python dependencies are auto-installed)
+- FusionMCPBridge add-in (MSI/PKG installer)
 
 **Quick Install:**
 ```
 /plugin add cabinlab/claude-plugins --path ai-cad-fusion
-pip install httpx mcp pydantic
 ```
 
-Then install the AgentBridge add-in - see [ai-cad-fusion/README.md](ai-cad-fusion/README.md) for detailed instructions.
-
-**Source:** [cabinlab/](https://github.com/cabinlab/)
+See [ai-cad-fusion/README.md](ai-cad-fusion/README.md) for full setup instructions including FusionMCPBridge installation.

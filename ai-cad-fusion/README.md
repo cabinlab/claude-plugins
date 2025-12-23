@@ -106,25 +106,45 @@ The MCP server runs in Claude's environment. It communicates via HTTP with Fusio
 
 ## Development
 
-See the [](https://github.com/cabinlab/) repo for full development documentation.
+### Dev Mode (Hot-Reload)
 
-### Quick Start for Contributors
+Dev mode allows hot-reloading code changes without restarting Fusion.
 
-**Dev mode** allows hot-reloading code changes without restarting Fusion:
+**Setup (once):**
 
-1. Set the environment variable (once):
-   ```powershell
-   # Windows PowerShell
-   [Environment]::SetEnvironmentVariable("FUSIONMCP_DEV_PATH", "C:\path\to\claude-plugins\ai-cad-fusion\FusionMCPBridge.bundle\Contents", "User")
-   ```
+Windows PowerShell:
+```powershell
+[Environment]::SetEnvironmentVariable("FUSIONMCP_DEV_PATH", "C:\path\to\claude-plugins\ai-cad-fusion\FusionMCPBridge.bundle\Contents", "User")
+```
 
-2. Restart Fusion, then verify:
-   ```bash
-   curl http://127.0.0.1:18080/health
-   # Should show: "dev_mode": true
-   ```
+macOS/Linux:
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+export FUSIONMCP_DEV_PATH="$HOME/path/to/claude-plugins/ai-cad-fusion/FusionMCPBridge.bundle/Contents"
+```
 
-3. After editing code, hot-reload:
-   ```bash
-   curl -X POST http://127.0.0.1:18080/dev/reload
-   ```
+**Verify dev mode is active:**
+```bash
+curl http://127.0.0.1:18080/health
+# Should show: "dev_mode": true, "dev_path": "..."
+```
+
+**Workflow:**
+1. Edit code in `FusionMCPBridge.bundle/Contents/`
+2. Hot-reload: `curl -X POST http://127.0.0.1:18080/dev/reload`
+3. Test immediately - changes are live
+
+**Disable dev mode:**
+```powershell
+# Windows
+[Environment]::SetEnvironmentVariable("FUSIONMCP_DEV_PATH", $null, "User")
+```
+
+### MCP Server Changes
+
+1. Edit `mcp-server/fusion_mcp_server.py`
+2. Reload the plugin in Claude Code
+
+### Building Installers
+
+MSI and PKG installers are built automatically by GitHub Actions when changes are pushed to `FusionMCPBridge.bundle/` or `installer/`. See `.github/workflows/build-fusion-installers.yml`.
