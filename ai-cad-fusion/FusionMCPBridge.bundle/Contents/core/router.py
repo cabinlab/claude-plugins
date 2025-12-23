@@ -93,6 +93,42 @@ class HandlerRegistry:
         except Exception as e:
             print(f"[ROUTER] Failed to import UI handlers: {e}")
             raise
+
+        try:
+            # Context handlers
+            from handlers.context import (
+                GetEditContextHandler,
+                GetSketchStateHandler,
+                GetCameraStateHandler
+            )
+            print("[ROUTER] Context handlers imported successfully")
+        except Exception as e:
+            print(f"[ROUTER] Failed to import context handlers: {e}")
+            raise
+
+        try:
+            # Selection handlers
+            from handlers.selection import (
+                GetSelectionHandler,
+                HighlightEntitiesHandler,
+                ClearSelectionHandler
+            )
+            print("[ROUTER] Selection handlers imported successfully")
+        except Exception as e:
+            print(f"[ROUTER] Failed to import selection handlers: {e}")
+            raise
+
+        try:
+            # Viewport handlers
+            from handlers.viewport import (
+                CaptureViewportHandler,
+                SetCameraHandler,
+                FitAllHandler
+            )
+            print("[ROUTER] Viewport handlers imported successfully")
+        except Exception as e:
+            print(f"[ROUTER] Failed to import viewport handlers: {e}")
+            raise
         
         # Register Phase 1 proof-of-concept handlers
         self.register("get_design_info", GetDesignInfoHandler)
@@ -137,7 +173,22 @@ class HandlerRegistry:
 
         # Register UI handlers
         self.register("trigger_ui_command", TriggerUICommandHandler)
-        
+
+        # Register context-awareness handlers (for agent context)
+        self.register("get_edit_context", GetEditContextHandler)
+        self.register("get_sketch_state", GetSketchStateHandler)
+        self.register("get_camera_state", GetCameraStateHandler)
+
+        # Register selection handlers
+        self.register("get_selection", GetSelectionHandler)
+        self.register("highlight_entities", HighlightEntitiesHandler)
+        self.register("clear_selection", ClearSelectionHandler)
+
+        # Register viewport handlers
+        self.register("capture_viewport", CaptureViewportHandler)
+        self.register("set_camera", SetCameraHandler)
+        self.register("fit_all", FitAllHandler)
+
         # Log all registered actions for debugging
         registered_actions = sorted(self._handlers.keys())
         print(f"[ROUTER] ✅ Successfully registered {len(registered_actions)} handlers:")

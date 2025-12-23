@@ -353,6 +353,58 @@ class RotateBodyArgs(BaseModel):
     copy: Optional[bool] = False
 
 
+# Context-awareness argument models
+class GetEditContextArgs(BaseModel):
+    """Arguments for get_edit_context tool - none required"""
+    pass
+
+
+class GetSketchStateArgs(BaseModel):
+    """Arguments for get_sketch_state tool"""
+    sketch: Optional[str] = None  # Optional - defaults to active sketch if in sketch edit mode
+
+
+class GetCameraStateArgs(BaseModel):
+    """Arguments for get_camera_state tool - none required"""
+    pass
+
+
+class GetSelectionArgs(BaseModel):
+    """Arguments for get_selection tool - none required"""
+    pass
+
+
+class HighlightEntitiesArgs(BaseModel):
+    """Arguments for highlight_entities tool"""
+    refs: List[Dict[str, Any]]  # Entity references to highlight
+    color: Optional[str] = "yellow"  # yellow, red, green, blue, orange, cyan, magenta
+    duration_ms: Optional[int] = 3000
+
+
+class ClearSelectionArgs(BaseModel):
+    """Arguments for clear_selection tool - none required"""
+    pass
+
+
+class CaptureViewportArgs(BaseModel):
+    """Arguments for capture_viewport tool"""
+    width: Optional[int] = 1920
+    height: Optional[int] = 1080
+    return_base64: Optional[bool] = True
+    path: Optional[str] = None
+
+
+class SetCameraArgs(BaseModel):
+    """Arguments for set_camera tool"""
+    orientation: Optional[str] = None  # top, bottom, front, back, left, right, iso, iso_back
+    fit_all: Optional[bool] = True
+
+
+class FitAllArgs(BaseModel):
+    """Arguments for fit_all tool - none required"""
+    pass
+
+
 # Initialize bridge client
 bridge = BridgeClient(BRIDGE_BASE_URL, BRIDGE_TIMEOUT)
 
@@ -1348,6 +1400,239 @@ async def list_tools(params=None) -> List[Tool]:
                     }
                 }
             }
+        ),
+        # Context-awareness tools
+        Tool(
+            name="get_edit_context",
+            description="Get current editing context - what document is open, what's being edited (sketch, component, etc.), and selection count. Lightweight summary for understanding user's current state.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "document": {"type": "object"},
+                            "activeComponent": {"type": "object"},
+                            "editMode": {"type": "object"},
+                            "selectionCount": {"type": "integer"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="get_sketch_state",
+            description="Get detailed sketch state including constraint health, entity counts, and profile status. Use when working with sketches to understand their current state.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "sketch": {
+                        "type": "string",
+                        "description": "Sketch name (optional - defaults to active sketch if in sketch edit mode)"
+                    }
+                },
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "sketchName": {"type": "string"},
+                            "plane": {"type": "string"},
+                            "isFullyConstrained": {"type": "boolean"},
+                            "constraintHealth": {"type": "object"},
+                            "profiles": {"type": "object"},
+                            "entities": {"type": "object"},
+                            "constraints": {"type": "object"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="get_camera_state",
+            description="Get current camera/view orientation. Useful for understanding what the user is looking at.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "orientation": {"type": "string"},
+                            "eye": {"type": "object"},
+                            "target": {"type": "object"},
+                            "upVector": {"type": "object"},
+                            "isFitAll": {"type": "boolean"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="get_selection",
+            description="Get information about currently selected entities in Fusion. Returns details about selected faces, edges, bodies, sketch entities, etc. Essential for understanding what the user wants to operate on.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "count": {"type": "integer"},
+                            "entities": {"type": "array"},
+                            "truncated": {"type": "boolean"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="highlight_entities",
+            description="Temporarily highlight entities in the viewport for visual confirmation. Use to show the user which geometry will be affected by an operation.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "refs": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": "Array of entity references to highlight (e.g., [{type: 'face', component: '...', body: '...', faceIndex: 0}])"
+                    },
+                    "color": {
+                        "type": "string",
+                        "enum": ["yellow", "red", "green", "blue", "orange", "cyan", "magenta"],
+                        "description": "Highlight color (default: yellow)"
+                    },
+                    "duration_ms": {
+                        "type": "integer",
+                        "description": "How long to highlight in milliseconds (default: 3000)"
+                    }
+                },
+                "required": ["refs"],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "highlighted": {"type": "integer"},
+                            "color": {"type": "string"},
+                            "errors": {"type": "array"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="clear_selection",
+            description="Clear the current selection in Fusion.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "cleared": {"type": "integer"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="capture_viewport",
+            description="Capture a screenshot of the current viewport. Returns the image as base64-encoded PNG.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "width": {
+                        "type": "integer",
+                        "description": "Image width in pixels (default: 1920)"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "Image height in pixels (default: 1080)"
+                    },
+                    "return_base64": {
+                        "type": "boolean",
+                        "description": "Whether to return image data as base64 (default: true)"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Optional file path to save the image"
+                    }
+                },
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "format": {"type": "string"},
+                            "width": {"type": "integer"},
+                            "height": {"type": "integer"},
+                            "path": {"type": "string"},
+                            "data": {"type": "string"},
+                            "size_bytes": {"type": "integer"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="set_camera",
+            description="Set the camera to a standard view orientation (top, front, iso, etc.).",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "orientation": {
+                        "type": "string",
+                        "enum": ["top", "bottom", "front", "back", "left", "right", "iso", "iso_back"],
+                        "description": "Standard view orientation"
+                    },
+                    "fit_all": {
+                        "type": "boolean",
+                        "description": "Whether to fit all geometry in view (default: true)"
+                    }
+                },
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "orientation": {"type": "string"},
+                            "fit_all": {"type": "boolean"}
+                        }
+                    }
+                }
+            }
+        ),
+        Tool(
+            name="fit_all",
+            description="Fit all geometry in the current view.",
+            inputSchema={
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "_meta": {
+                    "schemaVersion": SCHEMA_VERSION,
+                    "returnSchema": {
+                        "type": "object",
+                        "properties": {
+                            "success": {"type": "boolean"}
+                        }
+                    }
+                }
+            }
         )
     ]
 
@@ -1652,6 +1937,107 @@ async def _handle_trigger_ui_command(arguments: dict, request_id: str) -> List[T
     logger.info(f"[{request_id}] trigger_ui_command completed successfully")
     return create_json_response(result)
 
+
+# Context-awareness handlers
+async def _handle_get_edit_context(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = GetEditContextArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("get_edit_context", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] get_edit_context completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_get_sketch_state(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = GetSketchStateArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("get_sketch_state", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] get_sketch_state completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_get_camera_state(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = GetCameraStateArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("get_camera_state", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] get_camera_state completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_get_selection(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = GetSelectionArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("get_selection", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] get_selection completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_highlight_entities(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = HighlightEntitiesArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("highlight_entities", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] highlight_entities completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_clear_selection(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = ClearSelectionArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("clear_selection", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] clear_selection completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_capture_viewport(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = CaptureViewportArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("capture_viewport", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] capture_viewport completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_set_camera(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = SetCameraArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("set_camera", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] set_camera completed successfully")
+    return create_json_response(result)
+
+
+async def _handle_fit_all(arguments: dict, request_id: str) -> List[TextContent]:
+    try:
+        validated_args = FitAllArgs(**arguments)
+    except ValidationError as e:
+        logger.error(f"[{request_id}] Validation error: {str(e)}")
+        return create_error_response(f"Validation error: {str(e)}", "VALIDATION_ERROR")
+    result = await bridge.execute_action("fit_all", validated_args.dict(exclude_none=True), request_id=request_id)
+    logger.info(f"[{request_id}] fit_all completed successfully")
+    return create_json_response(result)
+
+
 _TOOL_HANDLERS: dict[str, Handler] = {
     "get_design_info": _handle_get_design_info,
     "create_parameter": _handle_create_parameter,
@@ -1684,6 +2070,16 @@ _TOOL_HANDLERS: dict[str, Handler] = {
     "project_edges": _handle_project_edges,
     "set_is_construction": _handle_set_is_construction,
     "trigger_ui_command": _handle_trigger_ui_command,
+    # Context-awareness tools
+    "get_edit_context": _handle_get_edit_context,
+    "get_sketch_state": _handle_get_sketch_state,
+    "get_camera_state": _handle_get_camera_state,
+    "get_selection": _handle_get_selection,
+    "highlight_entities": _handle_highlight_entities,
+    "clear_selection": _handle_clear_selection,
+    "capture_viewport": _handle_capture_viewport,
+    "set_camera": _handle_set_camera,
+    "fit_all": _handle_fit_all,
 }
 
 @server.call_tool()
