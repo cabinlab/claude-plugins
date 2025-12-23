@@ -106,4 +106,25 @@ The MCP server runs in Claude's environment. It communicates via HTTP with Fusio
 
 ## Development
 
-See the [](https://github.com/cabinlab/) repo for development documentation.
+See the [](https://github.com/cabinlab/) repo for full development documentation.
+
+### Quick Start for Contributors
+
+**Dev mode** allows hot-reloading code changes without restarting Fusion:
+
+1. Set the environment variable (once):
+   ```powershell
+   # Windows PowerShell
+   [Environment]::SetEnvironmentVariable("FUSIONMCP_DEV_PATH", "C:\path\to\claude-plugins\ai-cad-fusion\FusionMCPBridge.bundle\Contents", "User")
+   ```
+
+2. Restart Fusion, then verify:
+   ```bash
+   curl http://127.0.0.1:18080/health
+   # Should show: "dev_mode": true
+   ```
+
+3. After editing code, hot-reload:
+   ```bash
+   curl -X POST http://127.0.0.1:18080/dev/reload
+   ```
