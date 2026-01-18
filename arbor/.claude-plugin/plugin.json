@@ -1,0 +1,5 @@
+{
+  "name": "arbor",
+  "version": "1.0.0",
+  "description": "Graph-native code intelligence using arbor. Semantic code graphs for understanding relationships, impact analysis, and safe refactoring."
+}

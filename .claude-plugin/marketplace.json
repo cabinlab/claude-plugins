@@ -19,6 +19,17 @@
       },
       "category": "cad",
       "keywords": ["fusion", "cad", "sheet-metal", "mcp", "ai"]
+    },
+    {
+      "name": "arbor",
+      "source": "./arbor",
+      "description": "Graph-native code intelligence using arbor. Semantic code graphs for understanding relationships, impact analysis, and safe refactoring.",
+      "version": "1.0.0",
+      "author": {
+        "name": "cabinlab"
+      },
+      "category": "code-intelligence",
+      "keywords": ["arbor", "code-graph", "refactoring", "impact-analysis", "dependencies"]
     }
   ]
 }
