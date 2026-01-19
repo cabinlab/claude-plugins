@@ -10,7 +10,7 @@ Arbor builds a semantic graph of your codebase where functions, classes, and imp
 
 1. Install arbor via cargo:
    ```bash
-   cargo install arbor
+   cargo install arbor-graph-cli
    ```
 
 2. Install this plugin in Claude Code:

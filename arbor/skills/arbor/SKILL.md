@@ -7,21 +7,32 @@ description: Use when analyzing code relationships, checking refactoring impact/
 
 Arbor builds a semantic graph of codebases where functions, classes, and imports are nodes, and dependencies are edges. Use it instead of grep/search when you need to understand how code connects.
 
-## Setup (once per project)
+## IMPORTANT: Check Project Status
 
+**Always run this before using arbor commands:**
 ```bash
-arbor init      # Creates .arbor/ config
-arbor index     # Builds the graph (re-run after major changes)
+arbor status
 ```
 
-## Core Commands
+If not initialized, run setup:
+```bash
+arbor init      # Creates .arbor/ config
+arbor index     # Builds the graph
+```
+
+## Commands (require index)
 
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
+| `arbor status` | Index health and stats | **Run first** to check if index exists |
+| `arbor init` | Create .arbor/ config | Once per project, before indexing |
+| `arbor index` | Build/update the graph | After init, or after major changes |
 | `arbor refactor <name>` | Show blast radius | Before renaming/modifying anything |
 | `arbor explain <name>` | Graph-backed explanation | Understanding how code flows |
 | `arbor query <q>` | Search the graph | Finding related code |
+| `arbor export` | Export graph to JSON | Analyze graph data directly |
 | `arbor viz` | Launch visualizer | Visual exploration |
+| `arbor check-health` | System diagnostics | Troubleshooting setup issues |
 
 ## Typical Workflows
 
@@ -41,6 +52,14 @@ arbor query "database"          # Find database-related code
 ```bash
 arbor refactor foo --json       # Machine-readable output
 arbor refactor foo --why        # Explain reasoning
+arbor export -o graph.json      # Export full graph for analysis
+```
+
+### Diagnostics
+```bash
+arbor status                    # Check if index exists and is current
+arbor status --files            # Show detailed file statistics
+arbor check-health              # Verify system setup
 ```
 
 ## Supported Languages
@@ -61,3 +80,4 @@ Rust, TypeScript, JavaScript, Python, Go, Java, C, C++, C#, Dart
 - Run `arbor index` after pulling major changes
 - Use `--follow-symlinks` for monorepos with symlinked packages
 - The graph persists in `.arbor/` - only modified files re-index
+- If commands fail, run `arbor check-health` to diagnose setup issues
