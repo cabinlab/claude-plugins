@@ -1,0 +1,11 @@
+{
+  "autodeskProduct": "Fusion",
+  "type": "addin",
+  "id": "com.cabinlab.fusionmcpbridge",
+  "author": "cabinlab",
+  "description": "MCP Bridge for Claude AI - HTTP API server for Fusion automation",
+  "version": "0.1.0",
+  "runOnStartup": true,
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}
