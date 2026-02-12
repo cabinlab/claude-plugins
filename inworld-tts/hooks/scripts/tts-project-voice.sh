@@ -3,7 +3,7 @@
 # Source this from any TTS hook to get PROJECT_VOICE and PROJECT_RATE.
 # Override with INWORLD_TTS_VOICE env var for manual control.
 
-VOICES=(Alex Ashley Clive Craig Deborah Dennis Olivia Sarah Timothy Wendy)
+VOICES=(Alex Ashley Clive Craig Deborah Dennis Olivia Sarah Wendy)
 RATES=(1.1)
 
 PROJECT_DIR=$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
