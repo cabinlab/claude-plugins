@@ -30,6 +30,17 @@
       },
       "category": "code-intelligence",
       "keywords": ["arbor", "code-graph", "refactoring", "impact-analysis", "dependencies"]
+    },
+    {
+      "name": "inworld-tts",
+      "source": "./inworld-tts",
+      "description": "Per-project TTS voice notifications using Inworld AI. Each project gets a distinct auto-assigned voice so you can tell terminals apart by ear.",
+      "version": "1.0.0",
+      "author": {
+        "name": "cabinlab"
+      },
+      "category": "notifications",
+      "keywords": ["tts", "voice", "notifications", "inworld", "audio"]
     }
   ]
 }
