@@ -43,6 +43,7 @@ if [[ -f "$LAST_PLAY" ]]; then
 fi
 
 source "$(dirname "$0")/tts-project-voice.sh"
+source "$(dirname "$0")/play-audio.sh"
 VOICE="$PROJECT_VOICE"
 MODEL="${INWORLD_TTS_MODEL:-inworld-tts-1.5-max}"
 CACHE_DIR="${HOME}/.cache/claude-tts"
@@ -55,8 +56,7 @@ CACHED="${CACHE_DIR}/${HASH}.mp3"
 # Cache hit — play immediately
 if [[ -f "$CACHED" ]]; then
   date +%s > "$LAST_PLAY"
-  ffplay -nodisp -autoexit -loglevel quiet -volume 70 "$CACHED" 2>/dev/null &
-  wait $! 2>/dev/null || true
+  play_audio "$CACHED"
   exit 0
 fi
 
@@ -87,7 +87,6 @@ fi
 echo "$AUDIO" | base64 -d > "$CACHED"
 
 date +%s > "$LAST_PLAY"
-ffplay -nodisp -autoexit -loglevel quiet -volume 70 "$CACHED" 2>/dev/null &
-wait $! 2>/dev/null || true
+play_audio "$CACHED"
 
 exit 0

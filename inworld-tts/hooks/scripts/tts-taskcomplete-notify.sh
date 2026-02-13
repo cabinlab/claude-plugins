@@ -49,6 +49,7 @@ else
 fi
 
 source "$(dirname "$0")/tts-project-voice.sh"
+source "$(dirname "$0")/play-audio.sh"
 VOICE="$PROJECT_VOICE"
 MODEL="${INWORLD_TTS_MODEL:-inworld-tts-1.5-max}"
 CACHE_DIR="${HOME}/.cache/claude-tts"
@@ -58,8 +59,7 @@ HASH=$(printf '%s|%s|%s' "$MESSAGE" "$VOICE" "$PROJECT_RATE" | sha256sum | cut -
 CACHED="${CACHE_DIR}/${HASH}.mp3"
 
 if [[ -f "$CACHED" ]]; then
-  ffplay -nodisp -autoexit -loglevel quiet -volume 70 "$CACHED" 2>/dev/null &
-  wait $! 2>/dev/null || true
+  play_audio "$CACHED"
   exit 0
 fi
 
@@ -86,7 +86,6 @@ fi
 
 echo "$AUDIO" | base64 -d > "$CACHED"
 
-ffplay -nodisp -autoexit -loglevel quiet -volume 70 "$CACHED" 2>/dev/null &
-wait $! 2>/dev/null || true
+play_audio "$CACHED"
 
 exit 0
