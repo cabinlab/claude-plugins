@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P='${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-stop-notify.sh'; [[ \"$P\" == ?:* ]] && P=\"${P//\\\\//}\" && P=\"/${P/:/}\"; bash \"$P\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-stop-notify.sh\"",
             "timeout": 20
           }
         ]
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P='${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-subagentstop-notify.sh'; [[ \"$P\" == ?:* ]] && P=\"${P//\\\\//}\" && P=\"/${P/:/}\"; bash \"$P\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-subagentstop-notify.sh\"",
             "timeout": 20
           }
         ]
@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P='${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-taskcomplete-notify.sh'; [[ \"$P\" == ?:* ]] && P=\"${P//\\\\//}\" && P=\"/${P/:/}\"; bash \"$P\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-taskcomplete-notify.sh\"",
             "timeout": 20
           }
         ]
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P='${CLAUDE_PLUGIN_ROOT}/hooks/scripts/inworld-tts-notify.sh'; [[ \"$P\" == ?:* ]] && P=\"${P//\\\\//}\" && P=\"/${P/:/}\"; bash \"$P\"",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/inworld-tts-notify.sh\"",
             "timeout": 20
           }
         ]
