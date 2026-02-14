@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c \"import subprocess,sys,os;s=sys.argv[1].replace(chr(92),chr(47));s=chr(47)+s[0].lower()+s[2:] if len(s)>1 and s[1]==chr(58) else s;subprocess.run(['bash',s],env=os.environ)\" ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-stop-notify.sh",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/tts-stop.py",
             "timeout": 20
           }
         ]
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c \"import subprocess,sys,os;s=sys.argv[1].replace(chr(92),chr(47));s=chr(47)+s[0].lower()+s[2:] if len(s)>1 and s[1]==chr(58) else s;subprocess.run(['bash',s],env=os.environ)\" ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-subagentstop-notify.sh",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/tts-subagentstop.py",
             "timeout": 20
           }
         ]
@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c \"import subprocess,sys,os;s=sys.argv[1].replace(chr(92),chr(47));s=chr(47)+s[0].lower()+s[2:] if len(s)>1 and s[1]==chr(58) else s;subprocess.run(['bash',s],env=os.environ)\" ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tts-taskcomplete-notify.sh",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/tts-taskcomplete.py",
             "timeout": 20
           }
         ]
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c \"import subprocess,sys,os;s=sys.argv[1].replace(chr(92),chr(47));s=chr(47)+s[0].lower()+s[2:] if len(s)>1 and s[1]==chr(58) else s;subprocess.run(['bash',s],env=os.environ)\" ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/inworld-tts-notify.sh",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/tts-notify.py",
             "timeout": 20
           }
         ]
