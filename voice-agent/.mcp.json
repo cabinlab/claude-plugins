@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "graphiti": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with", "graphiti-core",
+        "--with", "mcp",
+        "${CLAUDE_PLUGIN_ROOT}/mcp-server/graphiti_mcp_server.py"
+      ],
+      "cwd": "${CLAUDE_PLUGIN_ROOT}"
+    }
+  }
+}

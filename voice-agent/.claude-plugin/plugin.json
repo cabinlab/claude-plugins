@@ -1,0 +1,5 @@
+{
+  "name": "voice-agent",
+  "version": "0.1.0",
+  "description": "Personal AI assistant plugin for the voice-enabled agent. Defines subagents, bash security hooks, MCP config, and behavioral extensions for multi-channel communication."
+}

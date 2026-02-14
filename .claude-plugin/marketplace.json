@@ -41,6 +41,17 @@
       },
       "category": "notifications",
       "keywords": ["tts", "voice", "notifications", "inworld", "audio"]
+    },
+    {
+      "name": "voice-agent",
+      "source": "./voice-agent",
+      "description": "Personal AI assistant plugin for the voice-enabled agent. Defines subagents, bash security hooks, MCP config, and behavioral extensions for multi-channel communication.",
+      "version": "0.1.0",
+      "author": {
+        "name": "cabinlab"
+      },
+      "category": "agent",
+      "keywords": ["voice", "agent", "assistant", "graphiti", "memory", "security"]
     }
   ]
 }
