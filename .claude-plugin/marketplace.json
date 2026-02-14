@@ -35,7 +35,7 @@
       "name": "inworld-tts",
       "source": "./inworld-tts",
       "description": "Per-project TTS voice notifications using Inworld AI. Each project gets a distinct auto-assigned voice so you can tell terminals apart by ear.",
-      "version": "1.1.9",
+      "version": "1.1.10",
       "author": {
         "name": "cabinlab"
       },

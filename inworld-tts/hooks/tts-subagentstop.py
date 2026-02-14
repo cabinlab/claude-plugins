@@ -1,4 +1,4 @@
-import subprocess, os, sys, re
+import subprocess, os, sys, re, shutil
 
 def to_posix(p):
     p = p.replace('\\', '/')
@@ -9,6 +9,6 @@ def to_posix(p):
 
 here = to_posix(os.path.dirname(os.path.abspath(__file__)))
 sys.exit(subprocess.run(
-    ['bash', here + '/scripts/tts-subagentstop-notify.sh'],
+    [shutil.which('bash') or 'bash', here + '/scripts/tts-subagentstop-notify.sh'],
     env=os.environ,
 ).returncode)
